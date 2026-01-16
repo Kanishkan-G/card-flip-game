@@ -1,38 +1,94 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+.app {
+  padding: 20px;
+  text-align: center;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.game-title {
+  font-size: 2.2rem;
+  margin-bottom: 5px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.stats {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+
+.grid {
+  display: grid;
+  gap: 15px;
+  justify-content: center;
+}
+
+.card {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  border-radius: 12px;
+  height: 100px;
+  width: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  transition: transform 0.3s, background 0.3s;
+  user-select: none;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card.hidden {
+  background: linear-gradient(135deg, #43cea2, #185a9d);
+  color: white;
+}
+
+.card.matched {
+  background: linear-gradient(135deg, #56ab2f, #a8e063);
+  color: #1b5e20;
+  cursor: default;
+}
+
+.result {
+  margin-top: 25px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.restart-btn {
+  margin-top: 10px;
+  padding: 12px 24px;
+  font-size: 16px;
+  background: #ffd54f;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.restart-btn:hover {
+  background: #ffca28;
+}
+
+/* 📱 Responsive Layout */
+@media (max-width: 768px) {
+  .card {
+    width: 100px;
+    height: 80px;
+    font-size: 14px;
   }
-  to {
-    transform: rotate(360deg);
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
