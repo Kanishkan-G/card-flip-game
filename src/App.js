@@ -3,6 +3,10 @@ import "./App.css";
 import cardData from "./cardData";
 import Hyperspeed from "./components/Hyperspeed/Hyperspeed";
 
+// ✅ API Gateway URL
+const API_URL =
+  "https://p6rv5j3f4j.execute-api.ap-northeast-1.amazonaws.com/prod/leaderboard";
+
 const shuffleCards = (cards) => {
   return [...cards].sort(() => Math.random() - 0.5);
 };
@@ -14,18 +18,27 @@ function App() {
   const [attempts, setAttempts] = useState(0);
   const [score, setScore] = useState(0);
 
-  // 🏆 Leaderboard states
+  // 🏆 Leaderboard
   const [playerName, setPlayerName] = useState("");
   const [leaderboard, setLeaderboard] = useState([]);
 
   const TOTAL_PAIRS = cardData.length / 2;
   const gameCompleted = matchedPairs.length === TOTAL_PAIRS;
 
-  // Load leaderboard from localStorage
+  // 🔥 FETCH leaderboard from DynamoDB
+  const fetchLeaderboard = async () => {
+    try {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      setLeaderboard(data);
+    } catch (err) {
+      console.error("Failed to fetch leaderboard:", err);
+    }
+  };
+
+  // ✅ Load leaderboard on page load
   useEffect(() => {
-    const stored =
-      JSON.parse(localStorage.getItem("memoryMatchLeaderboard")) || [];
-    setLeaderboard(stored);
+    fetchLeaderboard();
   }, []);
 
   const handleCardClick = (card) => {
@@ -56,28 +69,34 @@ function App() {
   const calculateScore = () =>
     Math.max(0, Math.min(100, Math.round((TOTAL_PAIRS / attempts) * 100)));
 
-  // Save score & update leaderboard when game finishes
+  // 🔥 Send score to AWS
+  const sendScoreToBackend = async (finalScore) => {
+    try {
+      await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          playerName,
+          score: finalScore,
+          attempts
+        })
+      });
+
+      // 🔁 Refresh leaderboard from DynamoDB
+      fetchLeaderboard();
+    } catch (error) {
+      console.error("Failed to save score:", error);
+    }
+  };
+
+  // ✅ When game completes
   useEffect(() => {
     if (gameCompleted && attempts > 0 && playerName) {
       const finalScore = calculateScore();
       setScore(finalScore);
-
-      const newEntry = {
-        name: playerName,
-        attempts,
-        score: finalScore,
-        date: new Date().toLocaleDateString()
-      };
-
-      const updatedLeaderboard = [...leaderboard, newEntry]
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 5); // Top 5 only
-
-      setLeaderboard(updatedLeaderboard);
-      localStorage.setItem(
-        "memoryMatchLeaderboard",
-        JSON.stringify(updatedLeaderboard)
-      );
+      sendScoreToBackend(finalScore);
     }
   }, [gameCompleted]);
 
@@ -92,7 +111,6 @@ function App() {
 
   return (
     <div className="app-wrapper">
-
       {/* 👤 Credit Card */}
       <div className="creator-card">
         🎮 Game created by <span>Kanishkan G</span>
@@ -135,7 +153,6 @@ function App() {
           Attempts: {attempts} | Score: {score}
         </div>
 
-        {/* 👤 Player name input */}
         {!gameCompleted && (
           <input
             className="player-input"
@@ -179,7 +196,7 @@ function App() {
           </div>
         )}
 
-        {/* 🏆 Leaderboard */}
+        {/* 🏆 Leaderboard (FROM DYNAMODB) */}
         <div className="leaderboard">
           <h3>🏆 Leaderboard</h3>
 
@@ -190,7 +207,7 @@ function App() {
               {leaderboard.map((entry, index) => (
                 <li key={index}>
                   <span className="rank">#{index + 1}</span>
-                  <span className="name">{entry.name}</span>
+                  <span className="name">{entry.playerName}</span>
                   <span className="score">{entry.score}</span>
                 </li>
               ))}
