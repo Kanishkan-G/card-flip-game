@@ -61,6 +61,11 @@ function App() {
   return (
     <div className="app-wrapper">
 
+      {/* 👤 Credit Card */}
+      <div className="creator-card">
+        🎮 Game created by <span>Kanishkan G</span>
+      </div>
+
       {/* 🌌 Hyperspeed Background */}
       <div className="background-layer">
         <Hyperspeed
@@ -92,7 +97,7 @@ function App() {
 
       {/* 🎮 Game UI */}
       <div className="app">
-        <h1 className="game-title">🃏 Memory Match Game</h1>
+        <h1 className="game-title">Memory Match Game</h1>
 
         <div className="stats">
           Attempts: {attempts} | Score: {score}

@@ -6,6 +6,41 @@
   overflow-x: hidden;
 }
 
+/* 👤 Creator credit card */
+.creator-card {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 20;
+
+  padding: 10px 16px;
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+  user-select: none;
+}
+
+/* Highlight name */
+.creator-card span {
+  font-weight: 700;
+  color: #ffca28;
+}
+
+/* 📱 Mobile adjustment */
+@media (max-width: 480px) {
+  .creator-card {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}
+
 /* 🌌 Hyperspeed background layer */
 .background-layer {
   position: fixed;
@@ -29,10 +64,59 @@
 }
 
 /* 🏷️ Title */
+/* 🎮 Colorful Game Title */
 .game-title {
-  font-size: 2.4rem;
-  margin-bottom: 5px;
+  font-size: 2.8rem;
+  margin-bottom: 8px;
+  font-weight: 800;
+  letter-spacing: 1px;
+
+  /* Gradient text */
+  background: linear-gradient(
+    90deg,
+    #ff9800,
+    #ff5722,
+    #e91e63,
+    #9c27b0,
+    #03a9f4
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: gradientMove 6s ease infinite;
+
+  text-shadow:
+    0 0 8px rgba(255, 152, 0, 0.35),
+    0 0 16px rgba(233, 30, 99, 0.35);
 }
+
+/* 🌈 Gradient animation */
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* 📱 Responsive title */
+@media (max-width: 768px) {
+  .game-title {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-title {
+    font-size: 1.9rem;
+  }
+}
+
 
 /* 📊 Stats */
 .stats {
