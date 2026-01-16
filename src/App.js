@@ -14,15 +14,27 @@ function App() {
   const [attempts, setAttempts] = useState(0);
   const [score, setScore] = useState(0);
 
+  // 🏆 Leaderboard states
+  const [playerName, setPlayerName] = useState("");
+  const [leaderboard, setLeaderboard] = useState([]);
+
   const TOTAL_PAIRS = cardData.length / 2;
   const gameCompleted = matchedPairs.length === TOTAL_PAIRS;
+
+  // Load leaderboard from localStorage
+  useEffect(() => {
+    const stored =
+      JSON.parse(localStorage.getItem("memoryMatchLeaderboard")) || [];
+    setLeaderboard(stored);
+  }, []);
 
   const handleCardClick = (card) => {
     if (
       selectedCards.length === 2 ||
       selectedCards.includes(card) ||
       matchedPairs.includes(card.pairId)
-    ) return;
+    )
+      return;
 
     const newSelection = [...selectedCards, card];
     setSelectedCards(newSelection);
@@ -44,11 +56,30 @@ function App() {
   const calculateScore = () =>
     Math.max(0, Math.min(100, Math.round((TOTAL_PAIRS / attempts) * 100)));
 
+  // Save score & update leaderboard when game finishes
   useEffect(() => {
-    if (gameCompleted && attempts > 0) {
-      setScore(calculateScore());
+    if (gameCompleted && attempts > 0 && playerName) {
+      const finalScore = calculateScore();
+      setScore(finalScore);
+
+      const newEntry = {
+        name: playerName,
+        attempts,
+        score: finalScore,
+        date: new Date().toLocaleDateString()
+      };
+
+      const updatedLeaderboard = [...leaderboard, newEntry]
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5); // Top 5 only
+
+      setLeaderboard(updatedLeaderboard);
+      localStorage.setItem(
+        "memoryMatchLeaderboard",
+        JSON.stringify(updatedLeaderboard)
+      );
     }
-  }, [gameCompleted, attempts]);
+  }, [gameCompleted]);
 
   const startNewGame = () => {
     setCards(shuffleCards(cardData));
@@ -56,6 +87,7 @@ function App() {
     setMatchedPairs([]);
     setAttempts(0);
     setScore(0);
+    setPlayerName("");
   };
 
   return (
@@ -97,11 +129,21 @@ function App() {
 
       {/* 🎮 Game UI */}
       <div className="app">
-        <h1 className="game-title">Memory Match Game</h1>
+        <h1 className="game-title">🃏 Memory Match Game</h1>
 
         <div className="stats">
           Attempts: {attempts} | Score: {score}
         </div>
+
+        {/* 👤 Player name input */}
+        {!gameCompleted && (
+          <input
+            className="player-input"
+            placeholder="Enter your name"
+            value={playerName}
+            onChange={(e) => setPlayerName(e.target.value)}
+          />
+        )}
 
         <div className="grid">
           {cards.map((card) => (
@@ -124,14 +166,37 @@ function App() {
         {gameCompleted && (
           <div className="result">
             <h2>🎉 You Win!</h2>
-            <p>Total Attempts: <b>{attempts}</b></p>
-            <p>Final Score: <b>{score} / 100</b></p>
+            <p>
+              Total Attempts: <b>{attempts}</b>
+            </p>
+            <p>
+              Final Score: <b>{score} / 100</b>
+            </p>
 
             <button className="restart-btn" onClick={startNewGame}>
               🔄 Start New Game
             </button>
           </div>
         )}
+
+        {/* 🏆 Leaderboard */}
+        <div className="leaderboard">
+          <h3>🏆 Leaderboard</h3>
+
+          {leaderboard.length === 0 ? (
+            <p className="empty">No scores yet</p>
+          ) : (
+            <ul>
+              {leaderboard.map((entry, index) => (
+                <li key={index}>
+                  <span className="rank">#{index + 1}</span>
+                  <span className="name">{entry.name}</span>
+                  <span className="score">{entry.score}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </div>
   );
