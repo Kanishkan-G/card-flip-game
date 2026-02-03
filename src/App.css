@@ -1,9 +1,14 @@
-/* 🌌 App wrapper */
+/* 🌌 App wrapper with background image */
 .app-wrapper {
   width: 100vw;
   height: 100vh;
   position: relative;
   overflow-x: hidden;
+
+  background-image: url("./assets/bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* 👤 Creator credit card */
@@ -23,30 +28,12 @@
   background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(8px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-
   user-select: none;
 }
 
-/* Highlight name */
 .creator-card span {
   font-weight: 700;
   color: #ffca28;
-}
-
-/* 📱 Mobile adjustment */
-@media (max-width: 480px) {
-  .creator-card {
-    font-size: 12px;
-    padding: 8px 12px;
-  }
-}
-
-/* 🌌 Hyperspeed background layer */
-.background-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none; /* 🔑 allows clicks through canvas */
 }
 
 /* 🎮 Game UI layer */
@@ -58,12 +45,10 @@
   text-align: center;
   color: #ffffff;
 
-  /* Glassmorphism */
   background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(6px);
 }
 
-/* 🏷️ Title */
 /* 🎮 Colorful Game Title */
 .game-title {
   font-size: 2.8rem;
@@ -71,7 +56,6 @@
   font-weight: 800;
   letter-spacing: 1px;
 
-  /* Gradient text */
   background: linear-gradient(
     90deg,
     #ff9800,
@@ -83,40 +67,14 @@
   background-size: 300% 300%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-
   animation: gradientMove 6s ease infinite;
-
-  text-shadow:
-    0 0 8px rgba(255, 152, 0, 0.35),
-    0 0 16px rgba(233, 30, 99, 0.35);
 }
 
-/* 🌈 Gradient animation */
 @keyframes gradientMove {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
-
-/* 📱 Responsive title */
-@media (max-width: 768px) {
-  .game-title {
-    font-size: 2.2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .game-title {
-    font-size: 1.9rem;
-  }
-}
-
 
 /* 📊 Stats */
 .stats {
@@ -133,7 +91,7 @@
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
-/* 🃏 Card base */
+/* 🃏 Card */
 .card {
   height: 90px;
   border-radius: 14px;
@@ -147,32 +105,28 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* ❓ Hidden card */
 .card.hidden {
   background: linear-gradient(135deg, #03b3c3, #0e5ea5);
   color: #ffffff;
 }
 
-/* 🔓 Visible card */
 .card:not(.hidden):not(.matched) {
   background: linear-gradient(135deg, #ffd54f, #ffca28);
   color: #222;
 }
 
-/* ✅ Matched card */
 .card.matched {
   background: linear-gradient(135deg, #4caf50, #81c784);
   color: #1b5e20;
   cursor: default;
 }
 
-/* ✨ Hover effect (only for playable cards) */
 .card:not(.matched):hover {
   transform: scale(1.06);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
-/* 🏁 Result box */
+/* 🏁 Result */
 .result {
   margin-top: 25px;
   padding: 20px;
@@ -181,7 +135,7 @@
   display: inline-block;
 }
 
-/* 🔄 Restart button */
+/* 🔄 Restart */
 .restart-btn {
   margin-top: 12px;
   padding: 12px 24px;
@@ -194,39 +148,7 @@
   color: white;
 }
 
-.restart-btn:hover {
-  opacity: 0.9;
-}
-
-/* 📱 Responsive adjustments */
-@media (max-width: 768px) {
-  .card {
-    height: 75px;
-    font-size: 13px;
-  }
-
-  .game-title {
-    font-size: 2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .card {
-    height: 70px;
-  }
-}
-.lights {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  position: absolute;
-}
-
-/* 👤 Player name input */
+/* 👤 Player input */
 .player-input {
   padding: 10px 14px;
   margin-bottom: 16px;
@@ -286,7 +208,33 @@
   color: #4caf50;
 }
 
-.empty {
-  font-size: 13px;
-  opacity: 0.7;
+/* 🚦 Start Screen */
+.start-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+}
+
+.start-box {
+  background: rgba(0, 0, 0, 0.75);
+  padding: 30px 35px;
+  border-radius: 18px;
+  text-align: center;
+}
+
+.start-btn {
+  margin-top: 18px;
+  padding: 14px 36px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(135deg, #ff9800, #ff5722);
 }
